@@ -29,7 +29,7 @@ class DentalKp(openpifpaf.datasets.DataModule):
     """
     DataModule for the Dental Dataset.
     """
-    debug = False
+    debug = True
     pin_memory = False
 
     train_annotations = 'data-dental/annotations/dental_keypoints_66_train.json'
@@ -155,11 +155,6 @@ class DentalKp(openpifpaf.datasets.DataModule):
         group.add_argument('--dental-eval-extended-scale', default=False, action='store_true')
         group.add_argument('--dental-eval-orientation-invariant',
                            default=cls.eval_orientation_invariant, type=float)
-        group.add_argument('--dental-use-24-kps', default=False, action='store_true',
-                           help=('The Dental dataset can '
-                                 'be trained with 24 or 66 kps. If you want to train a model '
-                                 'with 24 kps activate this flag. Change the annotations '
-                                 'path to the json files with 24 kps.'))
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
@@ -184,9 +179,7 @@ class DentalKp(openpifpaf.datasets.DataModule):
         cls.upsample_stride = args.dental_upsample
         cls.min_kp_anns = args.dental_min_kp_anns
         cls.b_min = args.dental_bmin
-        if args.dental_use_24_kps:
-            (cls.dental_keypoints, cls.dental_skeleton, cls.hflip, cls.dental_sigmas, cls.dental_pose,
-             cls.dental_categories, cls.dental_score_weights) = get_constants(24)
+        (cls.dental_keypoints, cls.dental_skeleton, cls.hflip, cls.dental_sigmas, cls.dental_pose, cls.dental_categories, cls.dental_score_weights) = get_constants()
         # evaluation
         cls.eval_annotation_filter = args.dental_eval_annotation_filter
         cls.eval_long_edge = args.dental_eval_long_edge
@@ -329,7 +322,6 @@ class DentalKp(openpifpaf.datasets.DataModule):
             collate_fn=openpifpaf.datasets.collate_images_anns_meta)
 
     def metrics(self):
-        # TODO: make sure that 24kp flag is activated when evaluating a 24kp model
         if COCO is None:
             return []
         return [openpifpaf.metric.Coco(

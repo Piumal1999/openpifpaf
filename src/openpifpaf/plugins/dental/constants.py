@@ -46,14 +46,9 @@ POSE = np.array([
     [2.5, 0.0, FRONT]  # 'front_low_left',              # 6
 ])
 
-def get_constants(num_kps):
-    if num_kps == 24:
-        POSE[:, 2] = 2.0
-        return [KEYPOINTS, SKELETON, HFLIP, SIGMAS,
-                POSE, CATEGORIES, SCORE_WEIGHTS]
-    # using no if-elif-else construction due to pylint no-else-return error
-    raise Exception("Only poses with 24 keypoints are available.")
-
+def get_constants():
+    POSE[:, 2] = 2.0
+    return [KEYPOINTS, SKELETON, HFLIP, SIGMAS, POSE, CATEGORIES, SCORE_WEIGHTS]
 
 def draw_ann(ann, *, keypoint_painter, filename=None, margin=0.5, aspect=None, **kwargs):
     from openpifpaf import show  # pylint: disable=import-outside-toplevel

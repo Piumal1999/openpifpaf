@@ -62,3 +62,6 @@ profile_decoder*
 eval.sh
 prep.sh
 train.sh
+
+src/openpifpaf/plugins/dental/test
+src/openpifpaf/plugins/dental/train
